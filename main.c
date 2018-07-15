@@ -173,8 +173,8 @@ char keyfind()
 		
 		int key=0;
 		char c;
-		char *str={""};
-		char *password={"456B456B"};	
+		char str[8];
+		char password[8]={"456B456B"};	
 			
 		while(1)
 		{
@@ -183,12 +183,8 @@ char keyfind()
 			{
 				Lcd8_Write_Char(c);       /* Display which key is pressed */
 				str[key]=c;
-				//strcat(str,c);
-				//Lcd8_Write_Char((char)key);
-				//Lcd8_Write_Char(str[key]);
-				//_delay_ms(1000);
 				++key;
-				//str[key]='\0';
+				str[key]='\0';
 				if(key==8)
 				{
 					break;
@@ -200,18 +196,19 @@ char keyfind()
 		}
 		Lcd8_Clear();
 		Lcd8_Set_Cursor(2,0);
-		int k,flag1=1;
+		int k,flag1=0;
 		for(k=0;k<8;k++)
 		{
-			if(strcmp(str,password)==0)
+			if(str[k]!=password[k])
 			{
-				flag1=0;
+				
+				flag1=1;
 				
 				break;
 			}
 		}
 		
-		if(flag1==1)
+		if(flag1==0)
 		{
 			Lcd8_Write_String("OK");
 			Lcd8_Set_Cursor(2,4);
@@ -224,13 +221,25 @@ char keyfind()
 		}
 		else
 		{
-			Lcd8_Set_Cursor(2,0);
+			Lcd8_Write_String("wrong ");
+			Lcd8_Set_Cursor(2,6);
 			Lcd8_Write_String(str);
-			Lcd8_Set_Cursor(2,8);
-			Lcd8_Write_String(" is wrong");
+			PORTB=0b00010000;
+			_delay_ms(200);
+			PORTB=0;
+			_delay_ms(200);
+			PORTB=0b00010000;
+			_delay_ms(200);
+			PORTB=0;
+			_delay_ms(200);
+			PORTB=0b00010000;
+			_delay_ms(200);
+			PORTB=0;
+			//Lcd8_Set_Cursor(2,8);
+			
 		}
 		flag1=1;
-		_delay_ms(500);
+		_delay_ms(5000);
 		Lcd8_Clear();
 		}
 		
